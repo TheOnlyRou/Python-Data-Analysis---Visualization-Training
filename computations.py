@@ -34,7 +34,6 @@ def compute_basic(df: pd.DataFrame):
     df.tail(52).head(51).sum(numeric_only=True)
 
 
-
 def exercise(df: pd.DataFrame):
     print(f"Lowest User Rating: \n{df['User Rating'].min()}")
     print(f"Highest Price: \n{df['Price'].max()}")

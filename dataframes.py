@@ -41,6 +41,7 @@ def get_netflix_example():
                              "Python\\data\\netflix_titles.csv", sep="|", index_col=0)
     return netflix_df
 
+
 def nst_est_example():
     # Reading a csv file with header names that we want to replace, so we set header=0, then provide the new names in
     # names as a list
@@ -68,6 +69,29 @@ def get_bestsellers_example():
     return bestsellers_df
 
 
+def get_bitcoin_example():
+    bitcoins_df = pd.read_csv("D:\\OneDevelopment\\Online Courses\\Data Visualization Analysis in "
+                              "Python\\data\\coin_Bitcoin.csv")
+    return bitcoins_df
+
+
+def get_countries_example():
+    countries_df = pd.read_csv("D:\\OneDevelopment\\Online Courses\\Data Visualization Analysis in "
+                              "Python\\data\\countries of the world.csv")
+    return countries_df
+
+
+def get_pokemon_example():
+    pokemon_df = pd.read_csv("D:\\OneDevelopment\\Online Courses\\Data Visualization Analysis in "
+                              "Python\\data\\Pokemon.csv")
+    return pokemon_df
+
+def get_happiness_example():
+    happiness_df = pd.read_csv("D:\\OneDevelopment\\Online Courses\\Data Visualization Analysis in "
+                              "Python\\data\\world-happiness-report-2021.csv")
+    return happiness_df
+
+
 def get_everest_example():
     everest_df = pd.read_csv("D:\\OneDevelopment\\Online Courses\\Data Visualization Analysis in "
                              "Python\\data\\mount_everest_deaths.csv", index_col=0)
@@ -83,7 +107,6 @@ def get_movietitles_example():
 
 
 def exercise():
-
     print(get_houses_example().shape)
     print(get_houses_example().size)
 
@@ -97,7 +120,6 @@ def exercise():
 
     # Displays only datatype information about columns in the dataframe
     print(get_houses_example().dtypes)
-
 
     print(get_movietitles_example().tail(7))
 
@@ -118,7 +140,6 @@ def exercise():
     # No missing values
     # Float64
     # 3 Integer Columns
-
 
     # pclass` - Passenger Class (1 = 1st; 2 = 2nd; 3 = 3rd)",
     # survived` - Survival (0 = No; 1 = Yes)",
@@ -141,4 +162,3 @@ def exercise():
     print(get_netflix_example().head(2))
     print(get_netflix_example().tail(2))
     print(get_netflix_example().dtypes)
-
