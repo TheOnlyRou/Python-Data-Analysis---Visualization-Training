@@ -81,6 +81,12 @@ def get_countries_example():
     return countries_df
 
 
+def get_tweets_example():
+    tweets_df = pd.read_csv("D:\\OneDevelopment\\Online Courses\\Data Visualization Analysis in "
+                              "Python\\data\\JoeBidenTweets.csv")
+    return tweets_df
+
+
 def get_pokemon_example():
     pokemon_df = pd.read_csv("D:\\OneDevelopment\\Online Courses\\Data Visualization Analysis in "
                               "Python\\data\\Pokemon.csv")

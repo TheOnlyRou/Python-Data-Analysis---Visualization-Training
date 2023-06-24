@@ -3,6 +3,7 @@ import dataframes as dataf
 import series_columns as sc
 import indices_sorting as ind
 import filtering as filt
+import modifying_columns as mdf
 
 
 def get_dataframes():
@@ -116,10 +117,10 @@ def section5():
     # Get 2012's top 5 fiction book with most reviews
     year2012 = bestsellers['Year'] == 2012
     fiction = bestsellers['Genre'] == 'Fiction'
-    filt.exercise(bestsellers,  sort_by="Reviews", top=5, filter=year2012 & fiction, ascending=False)
+    filt.exercise(bestsellers, sort_by="Reviews", top=5, filter=year2012 & fiction, ascending=False)
     # Bar plot of 5 authors who have most books with rating under 4.5
     filt.exercise(bestsellers, sort_by=['Author', 'User Rating'], top=5, filter=bestsellers['User Rating'] < 4.5,
-                  plot_type="barh", value_counts=True, ascending=False, column=['Author','User Rating'])
+                  plot_type="barh", value_counts=True, ascending=False, column=['Author', 'User Rating'])
 
 
 # Docs for pandas api: pandas.pydata.org
@@ -139,6 +140,24 @@ def main():
 
     # Section 5: Filtering
     # section5()
+
+    # Section 6:
+    # Set id as index
+    tweets = dataf.get_tweets_example()
+    mdf.exercise(tweets, index="id")
+    # Drop url column
+    mdf.exercise(tweets, drop_col="url")
+    # Drop 361388562
+    mdf.exercise(tweets, index='id', drop_row=361388562)
+    # New column 'user', value='Joe Biden'
+    mdf.exercise(tweets, add_col='user', add_value='Joe Biden')
+    # New column get ratio
+    mdf.exercise(tweets, add_col='ratio', filter=tweets['replies'] / tweets['retweets'], head=10, sort_by='ratio',
+                 ascending=False)
+    # Get interactions with tweet
+    mdf.exercise(tweets, add_col='interactions', filter=tweets['replies'] + tweets['retweets'] + tweets['likes'] +
+                                                        tweets['quotes'], head=10, sort_by='interactions',
+                 ascending=False)
     pass
 
 
