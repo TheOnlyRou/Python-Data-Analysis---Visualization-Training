@@ -1,9 +1,16 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
 import computations as comp
 import dataframes as dataf
 import series_columns as sc
 import indices_sorting as ind
 import filtering as filt
 import modifying_columns as mdf
+import updating_values as upd
+import datetime_manipulation as dtm
+import matplotlib_practice as mat
+import grouping_aggregating as grp
 
 
 def get_dataframes():
@@ -123,6 +130,187 @@ def section5():
                   plot_type="barh", value_counts=True, ascending=False, column=['Author', 'User Rating'])
 
 
+def section6():
+    # Set id as index
+    tweets = dataf.get_tweets_example()
+    mdf.exercise(tweets, index="id")
+    # Drop url column
+    mdf.exercise(tweets, drop_col="url")
+    # Drop 361388562
+    mdf.exercise(tweets, index='id', drop_row=361388562)
+    # New column 'user', value='Joe Biden'
+    mdf.exercise(tweets, add_col='user', add_value='Joe Biden')
+    # New column get ratio
+    mdf.exercise(tweets, add_col='ratio', filter=tweets['replies'] / tweets['retweets'], head=10, sort_by='ratio',
+                 ascending=False)
+    # Get interactions with tweet
+    mdf.exercise(tweets, add_col='interactions', filter=tweets['replies'] + tweets['retweets'] + tweets['likes'] +
+                                                        tweets['quotes'], head=10, sort_by='interactions',
+                 ascending=False)
+
+def section7():
+    titanic = dataf.get_titanic_example()
+    upd.replace_value(titanic, "sex", "Female", "F")
+    upd.replace_value(titanic, "sex", ["Female", "Male"], ["F", "M"])
+    # To replace unknown values set to some random value by None that doesn't show in stats, use the list notation.
+    upd.replace_value(titanic, "age",  ["?"], [None])
+
+    happiness = dataf.get_happiness_example()
+
+    happiness.set_index("Country name", inplace = True)
+    print(happiness)
+    happiness.sort_index(inplace=True)
+    print(happiness.loc["Brazil", ["Ladder score", "Healthy life expectancy"]])
+    # Replace can be done using Loc. and can also be used to create new columns and set their values. In this case,
+    # we add new column "isCold"
+    happiness.loc[["Finland", "Denmark", "Iceland", "Sweden", "Norway"], ['Regional indicator', 'isCold']] = ["Nordic Country", "Y"]
+    print(happiness.loc[["Finland", "Denmark", "Iceland", "Sweden", "Norway"]])
+
+    houses = dataf.get_houses_example()
+    # Get houses with more than 10 bedrooms
+    print(houses[houses["bedrooms"] >= 10].loc[:, ["id", "bedrooms"]])
+
+    # Use a boolean mask with loc
+    houses.loc[houses["bedrooms"] >= 10, ["bedrooms"]] = "10+"
+
+    netflix = dataf.get_netflix_example()
+    print(netflix.info())
+    upd.exercise(netflix, index="show_id", inplace=True)
+    upd.exercise(netflix, find="s2202", column="director", replace_value="Greg Whiteley")
+    upd.exercise(netflix, find=["s2881", "s3601"], column="duration", replace_value="GONE TOO SOON")
+    upd.exercise(netflix, rename="release year", new_name="release yr", inplace=True)
+    upd.exercise(netflix, loc="Evil", column="title", change_index="s6666", inplace=True)
+    upd.exercise(netflix, new_col="is_fav", default_val="False", column="title", predicate=["Young Royals", "Dark", "Big Mouth",
+                                                                            "BoJack Horseman", "The Queen's Gambit",
+                                                                            "American Vandal", "Russian Doll",
+                                                                            "Godless"], value=True)
+
+
+def section8():
+    # Datatypes in Pandas: Object, int64, float64, bool, datetime64, timedelta[ns], category
+    titanic = dataf.get_titanic_example()
+    # Remove unknown values and place None instead
+    titanic["age"].replace(["?"], [None], inplace=True)
+    print(titanic["age"].value_counts())
+    # Change datatype to float
+    titanic["age"] = titanic["age"].astype("float")
+    # Now you can perform numeric computations and comparisons like mean()
+    print("Mean Age: ", titanic["age"].mean())
+    titanic["sex"] = titanic["sex"].astype("category")
+    print(titanic["sex"])
+
+    titanic = dataf.get_titanic_example()
+    # Takes a series and converts it to numeric.
+    # Default is to raise exception if it finds an error. Can use "coerce" to convert errors to NaN.
+    # "ignore" will just return the input
+    pd.to_numeric(titanic["age"], errors="coerce")
+
+    # A helper function that determines if a value is na or not.
+    stats = dataf.get_gamestats_example()
+    print(stats.isna())
+    print(stats["league"].isna())
+
+    # dropna() Helper function to drop NA values
+
+    # Using it with a series is pretty simple
+    print(stats["assists"].dropna())
+
+    # Using it on the whole dataframe
+    print(stats.dropna())
+    # Can also use more args to make
+    # how: "any" or "all" that either drops row if ANY na value is found or if ALL values are na
+    print(stats.dropna(how="all"))
+    # subset: drop only if subset is na
+    print(stats.dropna(subset=["league"]))
+
+    # Another way to deal with NaN values is to fill NA values with some default value
+    # Using it on an entire dataframe
+    print(stats.fillna(0))
+    # Using it on a certain series
+    print(stats["rebounds"].fillna(0))
+    print(stats["league"].fillna("amateur"))
+
+    # can use it on an entire dataframe but specify which columns and values to replace
+    print(stats.fillna({"points": 0, "assists": 0}))
+
+    # Another way is to fill it with a vlaue from another column
+    sales = dataf.get_sales_example()
+    print(sales["shipping_zip"].fillna(sales["billing_zip"]))
+
+    netflix = dataf.get_netflix_example()
+    print("Dataframe Info:\n", netflix.info())
+    # Get rows with no country
+    print(netflix.loc[netflix["country"].isna()])
+
+    print(netflix[["country", "director", "cast"]])
+    # Get rows with no director, cast & country
+    no_country = netflix["country"].isna()
+    country_notna = ~netflix["country"].isna()
+    no_cast = netflix["cast"].isna()
+    no_director = netflix["director"].isna()
+    print(netflix[no_country & no_director & no_cast])
+    print(netflix[country_notna & no_director & no_cast])
+
+    # Drop rows with any na values
+    print(netflix.dropna(how="any"))
+    # Drop columns with any NA values
+    print(netflix.dropna(how="any", axis=1))
+
+    print(netflix.dropna(subset=["director", "cast"]))
+
+    netflix["rating"].loc["na"] = "TV-MA"
+    print(netflix["rating"])
+    print("Country Value Counts:\n", netflix["country"].value_counts().sort_values(ascending=False))
+    print("Country Mode:\n", netflix["country"].mode())
+    netflix.loc[no_country] = None
+    mode = netflix["country"].mode()[0]
+    netflix["country"].fillna(mode, inplace=True)
+    # can also be done like this:
+    netflix.fillna({"country": mode}, inplace=True)
+    print(netflix["country"])
+    pass
+
+
+def section9():
+    # ufos = dataf.get_ufos_example()
+    # dtm.parse_time(ufos, "date_time")
+    # dtm.get_datetime_properties(ufos, "date_time")
+
+    # Exercise
+    houses_df = pd.read_csv("D:\\OneDevelopment\\Online Courses\\Data Visualization Analysis in "
+                            "Python\\data\\kc_house_data.csv", parse_dates=["date"])
+    print("Dataframe Info", houses_df.info())
+    houses_df.sort_values("date", inplace=True)
+    print("Dataset Span:", (houses_df["date"].iloc[len(houses_df.index)-1]-houses_df["date"].iloc[0]).days, "days")
+
+    print("Most sales on a day:", houses_df["date"].value_counts().max())
+    print(houses_df["date"].mode()[0])
+
+    print(houses_df[houses_df["date"].dt.year == 2014].sort_values("date"))
+
+    print(houses_df["date"].month.value_counts().head(1))
+
+    one_year = houses_df["date"].between("2014-05-01", "2015-05-01").sort_values("date")
+    one_year["date"].dt.month.value_counts().sort_index().plot()
+    plt.show()
+    pass
+
+
+def section10():
+    mat.stylesheets()
+    mat.plotting_exercise(dataf.get_houses_example())
+    pass
+
+
+def section11():
+    df = dataf.get_titanic_example()
+    # grp.grouping_example(df, "sex")
+    grp.aggregate_example(df, "age", "age", ["min", "max", "mean"])
+
+    laliga = dataf.get_laliga_example()
+    grp.grp_agg_exercise(laliga)
+
+
 # Docs for pandas api: pandas.pydata.org
 # Datasets acquired from kaggle.com
 def main():
@@ -141,23 +329,24 @@ def main():
     # Section 5: Filtering
     # section5()
 
-    # Section 6:
-    # Set id as index
-    tweets = dataf.get_tweets_example()
-    mdf.exercise(tweets, index="id")
-    # Drop url column
-    mdf.exercise(tweets, drop_col="url")
-    # Drop 361388562
-    mdf.exercise(tweets, index='id', drop_row=361388562)
-    # New column 'user', value='Joe Biden'
-    mdf.exercise(tweets, add_col='user', add_value='Joe Biden')
-    # New column get ratio
-    mdf.exercise(tweets, add_col='ratio', filter=tweets['replies'] / tweets['retweets'], head=10, sort_by='ratio',
-                 ascending=False)
-    # Get interactions with tweet
-    mdf.exercise(tweets, add_col='interactions', filter=tweets['replies'] + tweets['retweets'] + tweets['likes'] +
-                                                        tweets['quotes'], head=10, sort_by='interactions',
-                 ascending=False)
+    # Section 6: Adding and Dropping Columns
+    # section 6()
+
+    # Section 7: Updating Values
+    # section7()
+
+    # Section 8: Working with types & NA Values
+    # section8()
+
+    # Section 9: Working with Dates & Times
+    # section9()
+
+    # Section 10: Matplotlib plots practice
+    # section10()
+
+    # Section 11: Grouping & Aggregating
+    section11()
+
     pass
 
 

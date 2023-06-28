@@ -42,6 +42,12 @@ def get_netflix_example():
     return netflix_df
 
 
+def get_laliga_example():
+    laliga_df = pd.read_csv("D:\\OneDevelopment\\Online Courses\\Data Visualization Analysis in "
+                             "Python\\data\\laliga.csv")
+    return laliga_df
+
+
 def nst_est_example():
     # Reading a csv file with header names that we want to replace, so we set header=0, then provide the new names in
     # names as a list
@@ -81,6 +87,31 @@ def get_countries_example():
     return countries_df
 
 
+def get_gamestats_example():
+    gamestats_df = pd.read_csv("D:\\OneDevelopment\\Online Courses\\Data Visualization Analysis in "
+                              "Python\\data\\game_stats.csv")
+    return gamestats_df
+
+
+def get_sales_example():
+    sales_df = pd.read_csv("D:\\OneDevelopment\\Online Courses\\Data Visualization Analysis in "
+                              "Python\\data\\sales.csv")
+    return sales_df
+
+
+def get_billboards_example():
+    billboards_df = pd.read_csv("D:\\OneDevelopment\\Online Courses\\Data Visualization Analysis in "
+                              "Python\\data\\billboard_charts.csv")
+    return billboards_df
+
+
+def get_ufos_example():
+    ufos_df = pd.read_csv("D:\\OneDevelopment\\Online Courses\\Data Visualization Analysis in "
+                              "Python\\data\\nuforc_reports.csv")
+    return ufos_df
+
+
+
 def get_tweets_example():
     tweets_df = pd.read_csv("D:\\OneDevelopment\\Online Courses\\Data Visualization Analysis in "
                               "Python\\data\\JoeBidenTweets.csv")
@@ -110,6 +141,8 @@ def get_movietitles_example():
     movie_titles_df = pd.read_csv("D:\\OneDevelopment\\Online Courses\\Data Visualization Analysis in "
                                   "Python\\data\\movie_titles.tsv", sep="\t", names=names)
     return movie_titles_df
+
+
 
 
 def exercise():
