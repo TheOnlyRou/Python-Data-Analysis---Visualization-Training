@@ -35,7 +35,7 @@ jupyter notebook
 
 
 <details>
-<summary>References For Methods & Objects used in this section</summary>
+<summary>### References For Methods & Objects used in this section</summary>
 
 * [DataFrame](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html)
 
