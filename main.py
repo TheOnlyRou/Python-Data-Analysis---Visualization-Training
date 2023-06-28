@@ -11,6 +11,9 @@ import updating_values as upd
 import datetime_manipulation as dtm
 import matplotlib_practice as mat
 import grouping_aggregating as grp
+import functions_apply as f
+import combining_dataframes as comb
+import seaborn_training as sea
 
 
 def get_dataframes():
@@ -345,8 +348,10 @@ def main():
     # section10()
 
     # Section 11: Grouping & Aggregating
-    section11()
+    # section11()
 
+    # Section 13: Seaborn
+    sea.seaborn_example()
     pass
 
 
